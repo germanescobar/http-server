@@ -16,6 +16,7 @@ h2. Handling HTTP requests
 To handle HTTP requests you will need to provide and implementation of the @net.gescobar.httpserver.Handler@ interface. For example:
 
 <pre><code>public class MyHandler implements Handler {
+  
   @Override
   public void handle(Request request, Response response) {
   
@@ -23,10 +24,8 @@ To handle HTTP requests you will need to provide and implementation of the @net.
       response.ok().write("<h1>Hola Mundo</h1>");
     } else {
       response.notFound();
-    }
-    
-  }
-	
+    } 
+  }	
 }
 </code></pre> 
 
