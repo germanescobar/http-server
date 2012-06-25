@@ -47,8 +47,12 @@ public interface Response {
 		
 	}
 
-	void status(HttpStatus status);
+	Response status(HttpStatus status);
 	
-	void contentType(String contentType);
+	Response ok();
+	
+	Response notFound();
+	
+	Response contentType(String contentType);
 	
 }

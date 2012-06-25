@@ -173,13 +173,27 @@ public class HttpConnection implements Runnable {
 		private String contentType;
 
 		@Override
-		public void status(HttpStatus status) {
+		public Response status(HttpStatus status) {
 			this.status = status;
+			
+			return this;
 		}
 
 		@Override
-		public void contentType(String contentType) {
+		public Response ok() {
+			return status(HttpStatus.OK);
+		}
+
+		@Override
+		public Response notFound() {
+			return status(HttpStatus.NOT_FOUND);
+		}
+
+		@Override
+		public Response contentType(String contentType) {
 			this.contentType = contentType;
+			
+			return this;
 		}
 
 		public String toString() {
