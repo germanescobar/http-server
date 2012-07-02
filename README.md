@@ -2,7 +2,7 @@ This is a super simple HTTP Server written in Java for fun and *learning*. It ac
 
 ## Starting and stopping
 
-To start the server you need to instantiate the @net.gescobar.httpserver.HttpServer@ class and call the @start()@ method:
+To start the server you need to instantiate the `net.gescobar.httpserver.HttpServer` class and call the `start()` method:
 
 ```java
 HttpServer server = new HttpServer(3000); // 3000 is the port to listen from, change it as needed
@@ -14,7 +14,7 @@ server.stop();
 
 ## Handling HTTP requests
 
-To handle HTTP requests you will need to provide an implementation of the @net.gescobar.httpserver.Handler@ interface. For example:
+To handle HTTP requests you will need to provide an implementation of the `net.gescobar.httpserver.Handler` interface. For example:
 
 ```java
 public class MyHandler implements Handler {
@@ -32,7 +32,7 @@ public class MyHandler implements Handler {
 }
 ```
 
-To use your implementation, set it in the @HttpServer@ instance:
+To use your implementation, set it in the `HttpServer` instance:
 
 ```java
 HttpServer server = new HttpServer(3000, new MyHandler());
@@ -42,6 +42,6 @@ HttpServer server = new HttpServer(3000, new MyHandler());
 server.setHandler( new MyHandler() );
 ````
 
-If you don't provide a @net.gescobar.httpserver.Handler@ implementation, the default one (that returns status 200 OK with no content) will be used.
+If you don't provide a `net.gescobar.httpserver.Handler` implementation, the default one (that returns status 200 OK with no content) will be used.
 
 That's it! As you can see, it's a simple, yet powerful design that will allow you to handle HTTP requests. You can extend it to provide new services such as static resources handling, session management and routing.
