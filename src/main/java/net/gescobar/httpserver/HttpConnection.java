@@ -9,6 +9,9 @@ import java.net.Socket;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Handles an HTTP client connection. It parses the request creating an {@link Request} and a {@link Response} 
  * implementations that are passed to the {@link Handler} implementation.
@@ -16,6 +19,8 @@ import java.util.Map;
  * @author German Escobar
  */
 public class HttpConnection implements Runnable {
+	
+	private Logger log = LoggerFactory.getLogger(HttpConnection.class);
 	
 	/**
 	 * The socket with the underlying connection.
@@ -41,6 +46,8 @@ public class HttpConnection implements Runnable {
 	@Override
 	public void run() {
 		
+		log.trace("handling HTTP request ... ");
+		
 		try {
 			
 			InputStream is = socket.getInputStream();
@@ -57,6 +64,8 @@ public class HttpConnection implements Runnable {
 			os.flush();
 			os.close();
 			
+			log.trace("http request finished");
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -69,6 +78,11 @@ public class HttpConnection implements Runnable {
 	 * @author German Escobar
 	 */
 	private class RequestImpl implements Request {
+		
+		/**
+		 * The Host header.
+		 */
+		private String host;
 		
 		/**
 		 * The HTTP method
@@ -121,16 +135,42 @@ public class HttpConnection implements Runnable {
 			String headerLine = reader.readLine();
 			while( !headerLine.equals("") ) {
 				
+				// headers come in the form "name: value"
 				String name = headerLine.split(":")[0].trim();
 				String value = headerLine.split(":")[1].trim();
 				
-				headers.put(name, value);
+				// add to the headers only if there is no corresponding field (e.g. "Host" header is mapped to the 
+				// *host* field of the request)
+				if ( !isKnownHeader(name, value) ) {
+					headers.put(name, value);
+				}
 				
 				// read next line
 				headerLine = reader.readLine();
 			}
 			
 			return headers;
+			
+		}
+		
+		/**
+		 * Checks if it is a known header and sets the corresponding field.
+		 * 
+		 * @param name the name of the header to check.
+		 * @param value the value of the header to check.
+		 * 
+		 * @return true if it is a known header, false otherwise
+		 */
+		private boolean isKnownHeader(String name, String value) {
+			
+			boolean ret = false;
+			
+			if (name.equalsIgnoreCase("host")) {
+				host = value;
+				return true;
+			}
+			
+			return ret;
 			
 		}
 
@@ -146,7 +186,7 @@ public class HttpConnection implements Runnable {
 
 		@Override
 		public String getHost() {
-			return null;
+			return host;
 		}
 
 		@Override
@@ -197,13 +237,13 @@ public class HttpConnection implements Runnable {
 		}
 
 		public String toString() {
-			String ret = "HTTP/1.1 " + status.getCode() + " " + status.getReason() + "\n\r";
+			String ret = "HTTP/1.1 " + status.getCode() + " " + status.getReason() + "\r\n";
 			
 			if (contentType != null) {
-				ret += "Content-Type: " + contentType + "\n\r";
+				ret += "Content-Type: " + contentType + "\r\n";
 			}
 			
-			return ret;
+			return ret + "\r\n";
 		}
 		
 	}

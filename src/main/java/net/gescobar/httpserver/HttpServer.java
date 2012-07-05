@@ -78,26 +78,35 @@ public class HttpServer {
 	}
 	
 	/**
-	 * Constructor. Initializes the server with the specified port and default {@link Handle} implementation.
+	 * Constructor. Initializes the server with the specified port and default {@link Handler} implementation.
 	 * 
 	 * @param port the port in which the server should listen.
 	 */
 	public HttpServer(int port) {
-		this(port, new Handler() {
+		this(new Handler() {
 
 			@Override
 			public void handle(Request request, Response response) {}
 			
-		});
+		}, port);
+	}
+	
+	/**
+	 * Constructor. Initializes the server with the specified {@link Handler} implementation and default port.
+	 * 
+	 * @param handler the {@link Handler} implementation that will handle the requests.
+	 */
+	public HttpServer(Handler handler) {
+		this(handler, DEFAULT_PORT);
 	}
 	
 	/**
 	 * Constructor. Initializes the server with the specified port and {@link Handler} implementation.
 	 *  
-	 * @param port the port in which the server should listen.
 	 * @param handler the {@link Handler} implementation that will handle the requests.
+	 * @param port the port in which the server should listen.
 	 */
-	public HttpServer(int port, Handler handler) {
+	public HttpServer(Handler handler, int port) {
 		this.port = port;
 		this.handler = handler;
 	}
@@ -120,7 +129,7 @@ public class HttpServer {
 		running = true;
 		
 		serverSocket = new ServerSocket(port);
-		serverSocket.setSoTimeout(30000);
+		serverSocket.setSoTimeout(500);
 		
 		serverDaemon = new ServerDaemon();
 		serverDaemon.start();
@@ -139,7 +148,9 @@ public class HttpServer {
 		// signals the daemon thread to stop the loop and terminate the execution.
 		log.debug("stopping the HTTP Server ... ");
 		running = false;
-		
+	
+		// wait until it actually stops
+		try { serverDaemon.join(); } catch (InterruptedException e) {}
 	}
 	
 	/**
@@ -161,11 +172,17 @@ public class HttpServer {
 					executor.execute( new HttpConnection(socket, handler) );
 					
 				} catch (SocketTimeoutException e) {
-					log.trace("No connection received this time");
+					// no connection received this time
 				} catch (IOException e) {
 					log.error("IOException while accepting connection: " + e.getMessage(), e);
 				}
 			}	
+			
+			try {
+				serverSocket.close();
+			} catch (IOException e) {
+				log.error("IOException while stopping server: " + e.getMessage(), e);
+			}
 			
 			log.trace("daemon thread is exiting ...");
 		}
@@ -185,6 +202,19 @@ public class HttpServer {
 
 	public void setRunning(boolean running) {
 		this.running = running;
+	}
+	
+	public static void main(String...args) throws IOException {
+		final HttpServer server = new HttpServer().start();
+		
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public synchronized void start() {
+				server.stop();
+			}
+			
+		});
 	}
 
 }
