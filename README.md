@@ -1,3 +1,5 @@
+[![Build Status](https://buildhive.cloudbees.com/job/germanescobar/job/http-server/badge/icon)](https://buildhive.cloudbees.com/job/germanescobar/job/http-server/)
+
 This is a super simple HTTP Server written in Java for fun and *learning*. It accepts HTTP requests and allows you to easily handle them.
 
 ## Starting and stopping
