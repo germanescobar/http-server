@@ -68,7 +68,7 @@ public class HttpServer {
 	/**
 	 * Tells if the server is running or not.
 	 */
-	private boolean running;
+	private volatile boolean running;
 	
 	/**
 	 * Constructor. Initializes the server with the default port and {@link Handler} implementation.
