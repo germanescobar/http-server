@@ -28,9 +28,9 @@ public interface Response {
 		OVERLOADED(502, "Overloaded"),
 		GATEWAY_TIMEOUT(503, "Gateway Timeout");
 
-		private int code;
+		private final int code;
 		
-		private String reason;
+		private final String reason;
 		
 		private HttpStatus(int code, String reason) {
 			this.code = code;

@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpServer {
 	
-	private Logger log = LoggerFactory.getLogger(HttpServer.class);
+	private final Logger log = LoggerFactory.getLogger(HttpServer.class);
 	
 	/**
 	 * The default port to use unless other is specified.
@@ -68,7 +68,7 @@ public class HttpServer {
 	/**
 	 * Tells if the server is running or not.
 	 */
-	private boolean running;
+	private volatile boolean running;
 	
 	/**
 	 * Constructor. Initializes the server with the default port and {@link Handler} implementation.
