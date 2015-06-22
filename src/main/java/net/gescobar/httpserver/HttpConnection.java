@@ -20,17 +20,17 @@ import org.slf4j.LoggerFactory;
  */
 public class HttpConnection implements Runnable {
 	
-	private Logger log = LoggerFactory.getLogger(HttpConnection.class);
+	private final Logger log = LoggerFactory.getLogger(HttpConnection.class);
 	
 	/**
 	 * The socket with the underlying connection.
 	 */
-	private Socket socket;
+	private final Socket socket;
 	
 	/**
 	 * The implementation that will handle requests.
 	 */
-	private Handler handler;
+	private final Handler handler;
 	
 	/**
 	 * Constructor.
@@ -87,12 +87,12 @@ public class HttpConnection implements Runnable {
 		/**
 		 * The HTTP method
 		 */
-		private String method;
+		private final String method;
 		
 		/**
 		 * The request path
 		 */
-		private String path;
+		private final String path;
 		
 		/**
 		 * The request headers
