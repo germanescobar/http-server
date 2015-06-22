@@ -48,18 +48,16 @@ public class HttpConnection implements Runnable {
 		
 		log.trace("handling HTTP request ... ");
 		
-		try {
-			
-			InputStream is = socket.getInputStream();
-			BufferedReader reader = new BufferedReader( new InputStreamReader(is) );
-			
+		try (InputStream is = socket.getInputStream();
+                     BufferedReader reader = new BufferedReader( new InputStreamReader(is) );
+                     OutputStream os = socket.getOutputStream();) {	
+
 			// build the request and response object
 			RequestImpl request = new RequestImpl(reader); 
 			ResponseImpl response = new ResponseImpl();
 			
 			handler.handle(request, response);
 			
-			OutputStream os = socket.getOutputStream();
 			os.write(response.toString().getBytes());
 			os.flush();
 			os.close();
