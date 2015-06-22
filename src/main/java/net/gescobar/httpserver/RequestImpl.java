@@ -31,7 +31,7 @@ class RequestImpl implements Request {
         /**
          * The request headers
          */
-        private Map<String,String> headers;
+        private final Map<String,String> headers;
 
         /**
          * Constructor.
