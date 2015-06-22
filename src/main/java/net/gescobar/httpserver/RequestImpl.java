@@ -11,7 +11,7 @@ import java.util.Map;
  * 
  * @author German Escobar
  */
-public class RequestImpl implements Request {
+class RequestImpl implements Request {
 
         /**
          * The Host header.

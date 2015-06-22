@@ -6,7 +6,7 @@ package net.gescobar.httpserver;
  * 
  * @author German Escobar
  */
-public class ResponseImpl implements Response {
+class ResponseImpl implements Response {
 
         private Response.HttpStatus status = Response.HttpStatus.OK;
 
